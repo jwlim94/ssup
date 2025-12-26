@@ -137,7 +137,7 @@ export async function createPost(formData: FormData) {
 }
 
 /**
- * 포스트 삭제 (Soft Delete)
+ * 포스트 삭제 (Soft Delete + 이미지 삭제)
  */
 export async function deletePost(postId: string) {
   const supabase = await createClient();
@@ -151,15 +151,34 @@ export async function deletePost(postId: string) {
     return { error: "You must be logged in to delete a post" };
   }
 
-  // 본인 포스트인지 확인 후 삭제
+  // 포스트 정보 가져오기 (이미지 URL 확인용)
+  const { data: post } = await supabase
+    .from("posts")
+    .select("image_url")
+    .eq("id", postId)
+    .eq("user_id", user.id)
+    .single();
+
+  // 본인 포스트인지 확인 후 삭제 (이미지 URL도 null로)
   const { error } = await supabase
     .from("posts")
-    .update({ deleted_at: new Date().toISOString() })
+    .update({
+      deleted_at: new Date().toISOString(),
+      image_url: null,
+    })
     .eq("id", postId)
     .eq("user_id", user.id);
 
   if (error) {
     return { error: error.message };
+  }
+
+  // 이미지가 있으면 Storage에서도 삭제
+  if (post?.image_url) {
+    const path = post.image_url.split("/post-images/")[1];
+    if (path) {
+      await supabase.storage.from("post-images").remove([path]);
+    }
   }
 
   revalidatePath("/");

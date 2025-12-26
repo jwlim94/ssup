@@ -1,15 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useLocation } from "@/hooks/useLocation";
 import { createPost } from "@/lib/actions/posts";
+import { uploadPostImage, deletePostImage } from "@/lib/actions/storage";
 import { APP_CONFIG, ROUTES } from "@/lib/constants";
 import { LocationPermission } from "@/components/location/LocationPermission";
 
 export default function NewPostPage() {
   const router = useRouter();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     coordinates,
     loading: locationLoading,
@@ -19,11 +22,65 @@ export default function NewPostPage() {
   } = useLocation();
 
   const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const charCount = content.length;
   const isOverLimit = charCount > APP_CONFIG.MAX_POST_LENGTH;
+
+  // 이미지 선택 핸들러
+  async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 클라이언트 측 검증
+    if (file.size > APP_CONFIG.MAX_IMAGE_SIZE_BYTES) {
+      setError(`Image must be less than ${APP_CONFIG.MAX_IMAGE_SIZE_MB}MB`);
+      return;
+    }
+
+    const allowedTypes = APP_CONFIG.ALLOWED_IMAGE_TYPES as readonly string[];
+    if (!allowedTypes.includes(file.type)) {
+      setError("Invalid image type. Allowed: JPEG, PNG, GIF, WebP");
+      return;
+    }
+
+    setImageUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const result = await uploadPostImage(formData);
+
+    if (result.error) {
+      setError(result.error);
+    } else if (result.url) {
+      setImageUrl(result.url);
+    }
+
+    setImageUploading(false);
+
+    // input 초기화
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  // 이미지 삭제 핸들러
+  async function handleImageRemove() {
+    if (!imageUrl) return;
+
+    const result = await deletePostImage(imageUrl);
+
+    if (result.error) {
+      setError(result.error);
+    } else {
+      setImageUrl(null);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,6 +109,9 @@ export default function NewPostPage() {
     formData.append("content", content);
     formData.append("latitude", coordinates.latitude.toString());
     formData.append("longitude", coordinates.longitude.toString());
+    if (imageUrl) {
+      formData.append("image_url", imageUrl);
+    }
 
     const result = await createPost(formData);
 
@@ -109,7 +169,9 @@ export default function NewPostPage() {
             </Link>
             <button
               onClick={handleSubmit}
-              disabled={loading || !content.trim() || isOverLimit}
+              disabled={
+                loading || !content.trim() || isOverLimit || imageUploading
+              }
               className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
             >
               {loading ? "Posting..." : "Post"}
@@ -160,10 +222,90 @@ export default function NewPostPage() {
           autoFocus
         />
 
-        {/* Character Count */}
-        <div className="flex justify-end">
+        {/* Image Preview */}
+        {imageUrl && (
+          <div className="relative mb-4 rounded-lg overflow-hidden">
+            <div className="relative aspect-video">
+              <Image
+                src={imageUrl}
+                alt="Preview"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <button
+              type="button"
+              onClick={handleImageRemove}
+              className="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* Image Uploading */}
+        {imageUploading && (
+          <div className="mb-4 p-4 bg-gray-50 rounded-lg flex items-center justify-center gap-2">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <span className="text-sm text-gray-600">Uploading image...</span>
+          </div>
+        )}
+
+        {/* Footer: Character Count & Image Button */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          {/* Add Image Button */}
+          <div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/gif,image/webp"
+              onChange={handleImageSelect}
+              className="hidden"
+              id="image-upload"
+              disabled={imageUploading || !!imageUrl}
+            />
+            <label
+              htmlFor="image-upload"
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                imageUrl || imageUploading
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-gray-600 hover:bg-gray-100 cursor-pointer"
+              }`}
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span className="text-sm">Add Image</span>
+            </label>
+          </div>
+
+          {/* Character Count */}
           <span
-            className={`text-sm ${isOverLimit ? "text-red-600" : "text-gray-400"}`}
+            className={`text-sm ${
+              isOverLimit ? "text-red-600" : "text-gray-400"
+            }`}
           >
             {charCount}/{APP_CONFIG.MAX_POST_LENGTH}
           </span>
@@ -172,4 +314,3 @@ export default function NewPostPage() {
     </div>
   );
 }
-
