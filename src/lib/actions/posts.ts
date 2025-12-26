@@ -50,6 +50,7 @@ export async function getPost(postId: string) {
     )
     .eq("id", postId)
     .is("deleted_at", null)
+    .gt("expires_at", new Date().toISOString())
     .single();
 
   if (error) {

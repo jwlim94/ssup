@@ -1,0 +1,62 @@
+"use client";
+
+import { useState } from "react";
+import { deleteComment } from "@/lib/actions/comments";
+
+interface DeleteCommentButtonProps {
+  commentId: string;
+  postId: string;
+}
+
+export function DeleteCommentButton({
+  commentId,
+  postId,
+}: DeleteCommentButtonProps) {
+  const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  async function handleDelete() {
+    setLoading(true);
+
+    const result = await deleteComment(commentId, postId);
+
+    if (result.error) {
+      alert(result.error);
+    }
+
+    setLoading(false);
+    setShowConfirm(false);
+  }
+
+  if (showConfirm) {
+    return (
+      <div className="flex items-center gap-1">
+        <button
+          onClick={handleDelete}
+          disabled={loading}
+          className="text-xs text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+        >
+          {loading ? "..." : "Yes"}
+        </button>
+        <span className="text-gray-300">|</span>
+        <button
+          onClick={() => setShowConfirm(false)}
+          disabled={loading}
+          className="text-xs text-gray-500 hover:text-gray-700"
+        >
+          No
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => setShowConfirm(true)}
+      className="text-xs text-gray-400 hover:text-red-600 transition-colors"
+    >
+      Delete
+    </button>
+  );
+}
+
