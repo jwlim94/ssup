@@ -2,22 +2,22 @@ import { type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 /**
- * Next.js 미들웨어
+ * Next.js Proxy (Next.js 16+)
  *
  * 역할:
  * - 모든 요청에서 Supabase 세션을 갱신
  * - 인증 상태를 최신으로 유지
  *
  * 주의:
- * - 이 미들웨어는 matcher에 정의된 경로에만 실행됨
+ * - 이 프록시는 matcher에 정의된 경로에만 실행됨
  * - 정적 파일(이미지, CSS 등)은 제외됨
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return await updateSession(request);
 }
 
 /**
- * 미들웨어가 실행될 경로 설정
+ * 프록시가 실행될 경로 설정
  *
  * 제외 경로:
  * - _next/static: Next.js 정적 파일
