@@ -68,7 +68,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
             <div className="flex items-center gap-4">
               <Link
                 href={ROUTES.HOME}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
               >
                 <svg
                   className="w-6 h-6"

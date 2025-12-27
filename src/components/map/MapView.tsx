@@ -48,7 +48,7 @@ export default function MapView({ posts, userLocation }: MapViewProps) {
   ];
 
   return (
-    <div className="w-full h-[calc(100vh-180px)] rounded-lg overflow-hidden border border-gray-200">
+    <div className="w-full h-[calc(100dvh-180px)] rounded-lg overflow-hidden border border-gray-200">
       <MapContainer
         center={center}
         zoom={15}

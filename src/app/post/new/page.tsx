@@ -153,7 +153,7 @@ export default function NewPostPage() {
           <div className="flex items-center justify-between">
             <Link
               href={ROUTES.HOME}
-              className="text-gray-600 hover:text-gray-900"
+              className="text-gray-600 hover:text-gray-900 p-2 -m-2"
             >
               <svg
                 className="w-6 h-6"

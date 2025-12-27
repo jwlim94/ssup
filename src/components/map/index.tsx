@@ -6,7 +6,7 @@ import { Spinner } from "@/components/ui/Spinner";
 // 지도 로딩 스켈레톤
 function MapLoadingSkeleton() {
   return (
-    <div className="w-full h-[calc(100vh-180px)] rounded-xl border border-gray-200 overflow-hidden relative bg-gray-100">
+    <div className="w-full h-[calc(100dvh-180px)] rounded-xl border border-gray-200 overflow-hidden relative bg-gray-100">
       {/* 지도 그리드 패턴 */}
       <div className="absolute inset-0 opacity-30">
         <div className="w-full h-full grid grid-cols-4 grid-rows-4">
@@ -24,7 +24,9 @@ function MapLoadingSkeleton() {
       {/* 중앙 로딩 */}
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
         <Spinner size="lg" className="text-blue-600" />
-        <span className="text-sm text-gray-500 font-medium">Loading map...</span>
+        <span className="text-sm text-gray-500 font-medium">
+          Loading map...
+        </span>
       </div>
 
       {/* 하단 컨트롤 스켈레톤 */}

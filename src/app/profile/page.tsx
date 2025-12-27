@@ -21,7 +21,7 @@ export default async function ProfilePage() {
             <div className="flex items-center gap-4">
               <Link
                 href={ROUTES.HOME}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
               >
                 <svg
                   className="w-6 h-6"
@@ -41,7 +41,7 @@ export default async function ProfilePage() {
             </div>
             <Link
               href={ROUTES.PROFILE_EDIT}
-              className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium py-2 px-3 -my-2 -mr-3"
             >
               Edit
             </Link>

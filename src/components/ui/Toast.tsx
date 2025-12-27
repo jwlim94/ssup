@@ -40,7 +40,7 @@ export function Toast({
 
   return (
     <div
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-out ${
+      className={`fixed top-safe left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-out ${
         isVisible
           ? "translate-y-0 opacity-100 scale-100"
           : "-translate-y-4 opacity-0 scale-95 pointer-events-none"

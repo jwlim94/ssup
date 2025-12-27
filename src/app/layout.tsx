@@ -33,11 +33,13 @@ export const metadata: Metadata = {
 /**
  * 뷰포트 설정
  * - 모바일 최적화
+ * - viewportFit: cover로 safe area 활성화
  */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1, // 모바일에서 확대 방지
+  viewportFit: "cover", // iOS safe area 지원
 };
 
 export default function RootLayout({

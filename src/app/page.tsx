@@ -259,14 +259,14 @@ export default function HomePage() {
             {user ? (
               <Link
                 href={ROUTES.PROFILE}
-                className="text-sm text-gray-600 hover:text-gray-900"
+                className="text-sm text-gray-600 hover:text-gray-900 py-2 px-3 -my-2 -mr-3"
               >
                 Profile
               </Link>
             ) : (
               <Link
                 href={ROUTES.LOGIN}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-sm text-blue-600 hover:underline py-2 px-3 -my-2 -mr-3"
               >
                 Log in
               </Link>
@@ -362,7 +362,7 @@ export default function HomePage() {
       {user && (
         <Link
           href={ROUTES.POST_NEW}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors z-20"
+          className="fixed bottom-safe right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors z-20"
         >
           <svg
             className="w-6 h-6"
