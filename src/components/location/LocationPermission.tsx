@@ -1,5 +1,7 @@
 "use client";
 
+import { Alert } from "@/components/ui/Alert";
+
 interface LocationPermissionProps {
   onRequestPermission: () => void;
   error?: string | null;
@@ -46,11 +48,7 @@ export function LocationPermission({
         used to find posts within 5km of you.
       </p>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm max-w-sm">
-          {error}
-        </div>
-      )}
+      {error && <Alert message={error} variant="error" className="mb-4 max-w-sm" />}
 
       <button
         onClick={onRequestPermission}

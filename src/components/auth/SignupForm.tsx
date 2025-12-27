@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { signUp } from "@/lib/actions/auth";
 import { ROUTES } from "@/lib/constants";
+import { Alert } from "@/components/ui/Alert";
 
 export function SignupForm() {
   const [error, setError] = useState<string | null>(null);
@@ -29,18 +30,10 @@ export function SignupForm() {
   return (
     <form action={handleSubmit} className="space-y-4">
       {/* Error Message */}
-      {error && (
-        <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-          {error}
-        </div>
-      )}
+      {error && <Alert message={error} variant="error" />}
 
       {/* Success Message */}
-      {success && (
-        <div className="p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
-          {success}
-        </div>
-      )}
+      {success && <Alert message={success} variant="success" />}
 
       {/* Email */}
       <div>

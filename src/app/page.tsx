@@ -11,6 +11,7 @@ import { PostList } from "@/components/post/PostList";
 import { MapView } from "@/components/map";
 import { Toast } from "@/components/ui/Toast";
 import { PullToRefreshIndicator } from "@/components/ui/PullToRefresh";
+import { Alert } from "@/components/ui/Alert";
 import { getNearbyPosts } from "@/lib/actions/posts";
 import { ROUTES } from "@/lib/constants";
 
@@ -320,9 +321,7 @@ export default function HomePage() {
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
           </div>
         ) : postsError ? (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-            {postsError}
-          </div>
+          <Alert message={postsError} variant="error" />
         ) : viewMode === "list" ? (
           <PostList posts={posts} currentUserId={user?.id} />
         ) : (

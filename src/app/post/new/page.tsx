@@ -9,6 +9,7 @@ import { createPost } from "@/lib/actions/posts";
 import { uploadPostImage, deletePostImage } from "@/lib/actions/storage";
 import { APP_CONFIG, ROUTES } from "@/lib/constants";
 import { LocationPermission } from "@/components/location/LocationPermission";
+import { Alert } from "@/components/ui/Alert";
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -208,11 +209,7 @@ export default function NewPostPage() {
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto px-4 py-4">
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
+        {error && <Alert message={error} variant="error" className="mb-4" />}
 
         <textarea
           value={content}

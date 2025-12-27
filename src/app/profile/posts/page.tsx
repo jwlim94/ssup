@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getMyPosts } from "@/lib/actions/profile";
 import { ROUTES } from "@/lib/constants";
 import { formatRelativeTime, formatTimeLeft } from "@/lib/utils/time";
+import { Alert } from "@/components/ui/Alert";
 
 export default async function MyPostsPage() {
   const { data: posts, error } = await getMyPosts();
@@ -41,11 +42,7 @@ export default async function MyPostsPage() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 py-4">
-        {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
-            {error}
-          </div>
-        )}
+        {error && <Alert message={error} variant="error" />}
 
         {!posts || posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">

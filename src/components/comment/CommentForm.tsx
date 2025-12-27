@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useLocation } from "@/hooks/useLocation";
 import { createComment } from "@/lib/actions/comments";
 import { APP_CONFIG } from "@/lib/constants";
+import { Alert } from "@/components/ui/Alert";
 
 interface CommentFormProps {
   postId: string;
@@ -54,11 +55,7 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4">
-      {error && (
-        <div className="mb-3 p-2 bg-red-50 border border-red-200 text-red-700 rounded text-sm">
-          {error}
-        </div>
-      )}
+      {error && <Alert message={error} variant="error" className="mb-3" />}
       <div className="flex gap-3">
         <input
           type="text"

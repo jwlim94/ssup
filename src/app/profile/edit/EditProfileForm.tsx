@@ -9,6 +9,7 @@ import {
   deleteAvatar,
 } from "@/lib/actions/profile";
 import { ROUTES } from "@/lib/constants";
+import { Alert } from "@/components/ui/Alert";
 
 interface Profile {
   id: string;
@@ -131,16 +132,8 @@ export default function EditProfileForm({
 
       <main className="max-w-lg mx-auto p-4">
         {/* Messages */}
-        {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-        {success && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
-            {success}
-          </div>
-        )}
+        {error && <Alert message={error} variant="error" className="mb-4" />}
+        {success && <Alert message={success} variant="success" className="mb-4" />}
 
         {/* Avatar Section */}
         <div className="bg-white rounded-lg p-6 mb-4">
