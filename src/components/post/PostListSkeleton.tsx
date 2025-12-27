@@ -8,7 +8,7 @@ interface PostListSkeletonProps {
 
 export function PostListSkeleton({ count = 3 }: PostListSkeletonProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {Array.from({ length: count }).map((_, index) => (
         <PostCardSkeleton
           key={index}

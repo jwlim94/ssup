@@ -55,21 +55,23 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-gray-200 p-4">
+    <form onSubmit={handleSubmit} className="border-t border-gray-100 p-4">
       {error && <Alert message={error} variant="error" className="mb-3" />}
       <div className="flex gap-3">
-        <input
-          type="text"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Write a comment..."
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-          disabled={loading}
-        />
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="Write a comment..."
+            className="w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all"
+            disabled={loading}
+          />
+        </div>
         <button
           type="submit"
           disabled={loading || !content.trim() || isOverLimit}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5 min-w-[60px]"
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5 min-w-[60px]"
         >
           {loading ? <Spinner size="sm" /> : "Post"}
         </button>
@@ -77,7 +79,9 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
       {content.length > 0 && (
         <div className="mt-2 text-right">
           <span
-            className={`text-xs ${isOverLimit ? "text-red-600" : "text-gray-400"}`}
+            className={`text-xs font-medium ${
+              isOverLimit ? "text-red-600" : "text-gray-400"
+            }`}
           >
             {charCount}/{APP_CONFIG.MAX_COMMENT_LENGTH}
           </span>
@@ -86,4 +90,3 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
     </form>
   );
 }
-

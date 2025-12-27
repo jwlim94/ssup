@@ -62,7 +62,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
+      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -84,39 +84,58 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
                   />
                 </svg>
               </Link>
-              <h1 className="font-semibold">Post</h1>
+              <h1 className="font-semibold text-gray-900 text-lg">Post</h1>
             </div>
-            {isPostOwner && <DeletePostButton postId={id} />}
           </div>
         </div>
       </header>
 
       {/* Post Content */}
-      <main className="max-w-lg mx-auto">
-        <article className="bg-white border-b border-gray-200 p-4">
+      <main className="max-w-lg mx-auto px-4 py-4">
+        <article className="bg-white rounded-xl p-4 shadow-sm">
           {/* Author Info */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              {user.avatar_url ? (
-                <Image
-                  src={user.avatar_url}
-                  alt={user.nickname}
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-gray-500 text-xl">
-                  {user.nickname.charAt(0).toUpperCase()}
-                </span>
-              )}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
+                {user.avatar_url ? (
+                  <Image
+                    src={user.avatar_url}
+                    alt={user.nickname}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-blue-600 font-semibold text-xl">
+                    {user.nickname.charAt(0).toUpperCase()}
+                  </span>
+                )}
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900">{user.nickname}</p>
+                <p className="flex items-center gap-1 text-sm text-gray-500">
+                  <svg
+                    className="w-3.5 h-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  {formatRelativeTime(post.created_at)}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="font-medium text-gray-900">{user.nickname}</p>
-              <p className="text-sm text-gray-500">
-                {formatRelativeTime(post.created_at)}
-              </p>
-            </div>
+            {isPostOwner && (
+              <div className="pt-1">
+                <DeletePostButton postId={id} />
+              </div>
+            )}
           </div>
 
           {/* Content */}
@@ -137,7 +156,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           )}
 
           {/* Stats & Actions */}
-          <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t border-gray-100">
+          <div className="flex items-center justify-between text-sm pt-2">
             <div className="flex items-center gap-6">
               <PostLikeButton
                 postId={id}
@@ -145,7 +164,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
                 initialCount={post.likes_count}
                 disabled={!currentUser}
               />
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5 text-gray-500">
                 <svg
                   className="w-5 h-5"
                   fill="none"
@@ -159,16 +178,18 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
                     d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                   />
                 </svg>
-                {post.comments_count}
+                <span className="font-medium">{post.comments_count}</span>
               </span>
             </div>
-            <span>{formatTimeLeft(post.expires_at)}</span>
+            <span className="text-xs font-medium text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">
+              {formatTimeLeft(post.expires_at)}
+            </span>
           </div>
         </article>
 
         {/* Comments Section */}
-        <div className="bg-white">
-          <div className="p-4 border-b border-gray-200">
+        <div className="bg-white rounded-xl shadow-sm mt-4">
+          <div className="p-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-900">
               Comments ({commentsWithLikeStatus.length})
             </h2>

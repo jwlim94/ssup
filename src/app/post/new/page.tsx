@@ -146,9 +146,9 @@ export default function NewPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
+      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link
@@ -174,7 +174,7 @@ export default function NewPostPage() {
               disabled={
                 loading || !content.trim() || isOverLimit || imageUploading
               }
-              className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
+              className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 shadow-sm"
             >
               {loading && <Spinner size="sm" />}
               {loading ? "Posting..." : "Post"}
@@ -183,11 +183,14 @@ export default function NewPostPage() {
         </div>
       </header>
 
-      {/* Location Notice */}
-      <div className="max-w-lg mx-auto px-4 py-3 border-b border-gray-100">
-        <div className="flex items-center gap-2 text-sm text-gray-500">
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="max-w-lg mx-auto px-4 py-4">
+        {error && <Alert message={error} variant="error" className="mb-4" />}
+
+        {/* Location Notice */}
+        <div className="flex items-center gap-2 text-sm text-gray-500 mb-4 bg-blue-50 px-3 py-2 rounded-lg">
           <svg
-            className="w-4 h-4"
+            className="w-4 h-4 text-blue-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -205,109 +208,108 @@ export default function NewPostPage() {
               d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
-          <span>Your current location will be attached</span>
+          <span className="text-blue-600">
+            Your current location will be attached
+          </span>
         </div>
-      </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto px-4 py-4">
-        {error && <Alert message={error} variant="error" className="mb-4" />}
+        <div className="bg-white rounded-xl shadow-sm p-4 mb-4">
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="What's happening nearby?"
+            className="w-full h-40 resize-none outline-none text-lg text-gray-900 placeholder-gray-400"
+            autoFocus
+          />
 
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="What's happening nearby?"
-          className="w-full h-40 resize-none outline-none text-lg placeholder-gray-400"
-          autoFocus
-        />
-
-        {/* Image Preview */}
-        {imageUrl && (
-          <div className="relative mb-4 rounded-lg overflow-hidden">
-            <div className="relative aspect-video">
-              <Image
-                src={imageUrl}
-                alt="Preview"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={handleImageRemove}
-              className="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
+          {/* Image Preview */}
+          {imageUrl && (
+            <div className="relative mb-4 rounded-lg overflow-hidden">
+              <div className="relative aspect-video">
+                <Image
+                  src={imageUrl}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
                 />
-              </svg>
-            </button>
-          </div>
-        )}
+              </div>
+              <button
+                type="button"
+                onClick={handleImageRemove}
+                className="absolute top-2 right-2 w-8 h-8 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black/70 transition-colors"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
 
-        {/* Image Uploading */}
-        {imageUploading && (
-          <div className="mb-4 p-4 bg-gray-50 rounded-lg flex items-center justify-center gap-2">
-            <Spinner size="md" className="text-blue-600" />
-            <span className="text-sm text-gray-600">Uploading image...</span>
-          </div>
-        )}
+          {/* Image Uploading */}
+          {imageUploading && (
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg flex items-center justify-center gap-2">
+              <Spinner size="md" className="text-blue-600" />
+              <span className="text-sm text-gray-600">Uploading image...</span>
+            </div>
+          )}
 
-        {/* Footer: Character Count & Image Button */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          {/* Add Image Button */}
-          <div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onChange={handleImageSelect}
-              className="hidden"
-              id="image-upload"
-              disabled={imageUploading || !!imageUrl}
-            />
-            <label
-              htmlFor="image-upload"
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                imageUrl || imageUploading
-                  ? "text-gray-300 cursor-not-allowed"
-                  : "text-gray-600 hover:bg-gray-100 cursor-pointer"
+          {/* Footer: Character Count & Image Button */}
+          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+            {/* Add Image Button */}
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+                onChange={handleImageSelect}
+                className="hidden"
+                id="image-upload"
+                disabled={imageUploading || !!imageUrl}
+              />
+              <label
+                htmlFor="image-upload"
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+                  imageUrl || imageUploading
+                    ? "text-gray-300 cursor-not-allowed"
+                    : "text-gray-600 hover:bg-gray-100 cursor-pointer"
+                }`}
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                <span className="text-sm font-medium">Add Image</span>
+              </label>
+            </div>
+
+            {/* Character Count */}
+            <span
+              className={`text-sm font-medium ${
+                isOverLimit ? "text-red-600" : "text-gray-400"
               }`}
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
-              <span className="text-sm">Add Image</span>
-            </label>
+              {charCount}/{APP_CONFIG.MAX_POST_LENGTH}
+            </span>
           </div>
-
-          {/* Character Count */}
-          <span
-            className={`text-sm ${
-              isOverLimit ? "text-red-600" : "text-gray-400"
-            }`}
-          >
-            {charCount}/{APP_CONFIG.MAX_POST_LENGTH}
-          </span>
         </div>
       </form>
     </div>

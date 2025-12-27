@@ -49,7 +49,7 @@ export function SignupForm() {
           name="email"
           type="email"
           required
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
           placeholder="you@example.com"
         />
       </div>
@@ -69,7 +69,7 @@ export function SignupForm() {
           required
           minLength={2}
           maxLength={30}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
           placeholder="Your nickname"
         />
         <p className="text-xs text-gray-500 mt-1">
@@ -91,7 +91,7 @@ export function SignupForm() {
           type="password"
           required
           minLength={6}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-gray-900 placeholder-gray-400"
           placeholder="••••••••"
         />
         <p className="text-xs text-gray-500 mt-1">At least 6 characters</p>

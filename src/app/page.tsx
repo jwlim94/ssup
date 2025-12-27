@@ -166,14 +166,11 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-gray-50">
         {/* Skeleton Header */}
-        <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
           <div className="max-w-lg mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 bg-gray-200 rounded animate-pulse" />
-                <div className="h-5 w-12 bg-gray-200 rounded animate-pulse" />
-              </div>
-              <div className="h-4 w-14 bg-gray-200 rounded animate-pulse" />
+              <div className="h-5 w-12 bg-gray-200 rounded animate-pulse" />
+              <div className="w-6 h-6 bg-gray-200 rounded-full animate-pulse" />
             </div>
           </div>
         </header>
@@ -181,8 +178,8 @@ export default function HomePage() {
         {/* Skeleton Controls */}
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="h-8 w-24 bg-gray-200 rounded-lg animate-pulse" />
-            <div className="h-8 w-20 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-9 w-24 bg-white rounded-xl shadow-sm animate-pulse" />
+            <div className="h-9 w-20 bg-white rounded-xl shadow-sm animate-pulse" />
           </div>
         </div>
 
@@ -206,7 +203,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50" ref={mainRef}>
+    <div className={`min-h-screen bg-gray-50 ${viewMode === "map" ? "overflow-hidden h-screen" : ""}`} ref={mainRef}>
       {/* Pull to Refresh Indicator */}
       <PullToRefreshIndicator
         pullDistance={pullDistance}
@@ -231,42 +228,33 @@ export default function HomePage() {
       />
 
       {/* Header */}
-      <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
+      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <svg
-                className="w-5 h-5 text-blue-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span className="font-semibold">SSUP</span>
-            </div>
+            <span className="font-bold text-gray-900 text-lg">SSUP</span>
             {user ? (
               <Link
                 href={ROUTES.PROFILE}
-                className="text-sm text-gray-600 hover:text-gray-900 py-2 px-3 -my-2 -mr-3"
+                className="text-blue-600 hover:text-blue-700 p-2 -m-2"
               >
-                Profile
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
               </Link>
             ) : (
               <Link
                 href={ROUTES.LOGIN}
-                className="text-sm text-blue-600 hover:underline py-2 px-3 -my-2 -mr-3"
+                className="text-sm font-medium text-blue-600 hover:text-blue-700 py-2 px-3 -my-2 -mr-3"
               >
                 Log in
               </Link>
@@ -278,24 +266,43 @@ export default function HomePage() {
       {/* Controls: Sort + View Toggle */}
       <div className="max-w-lg mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          {/* Sort Options */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-          >
-            <option value="recent">Recent</option>
-            <option value="distance">Nearest</option>
-            <option value="popular">Popular</option>
-          </select>
+          {/* Sort Options (only in list view) */}
+          {viewMode === "list" ? (
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="appearance-none h-9 pl-3 pr-8 text-sm font-medium text-gray-700 border-0 rounded-xl bg-white shadow-sm focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer"
+              >
+                <option value="recent">Recent</option>
+                <option value="distance">Nearest</option>
+                <option value="popular">Popular</option>
+              </select>
+              <svg
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          ) : (
+            <div /> 
+          )}
 
           {/* View Toggle */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+          <div className="flex items-center h-9 bg-white rounded-xl p-1 shadow-sm">
             <button
               onClick={() => setViewMode("list")}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              className={`px-2.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
                 viewMode === "list"
-                  ? "bg-white text-gray-900 shadow-sm"
+                  ? "bg-blue-600 text-white"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
@@ -315,9 +322,9 @@ export default function HomePage() {
             </button>
             <button
               onClick={() => setViewMode("map")}
-              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+              className={`px-2.5 py-1.5 text-sm font-medium rounded-lg transition-all ${
                 viewMode === "map"
-                  ? "bg-white text-gray-900 shadow-sm"
+                  ? "bg-blue-600 text-white"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
@@ -340,7 +347,7 @@ export default function HomePage() {
       </div>
 
       {/* Content: List or Map */}
-      <main className="max-w-lg mx-auto px-4 pb-24">
+      <main className={`max-w-lg mx-auto px-4 ${viewMode === "list" ? "pb-24" : "pb-4"}`}>
         {postsLoading ? (
           <PostListSkeleton count={3} />
         ) : postsError ? (
@@ -358,11 +365,11 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* FAB - New Post Button */}
-      {user && (
+      {/* FAB - New Post Button (only in list view) */}
+      {user && viewMode === "list" && (
         <Link
           href={ROUTES.POST_NEW}
-          className="fixed bottom-safe right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors z-20"
+          className="fixed bottom-safe right-6 w-14 h-14 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-600/30 flex items-center justify-center hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-600/40 transition-all active:scale-95 z-20"
         >
           <svg
             className="w-6 h-6"
