@@ -34,7 +34,7 @@ export function CommentItem({
     <div className="py-4 border-b border-gray-100 last:border-b-0">
       <div className="flex gap-3">
         {/* Avatar */}
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden shrink-0">
+        <div className="w-8 h-8 rounded-full bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden shrink-0">
           {comment.users.avatar_url ? (
             <Image
               src={comment.users.avatar_url}

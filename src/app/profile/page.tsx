@@ -67,7 +67,7 @@ export default async function ProfilePage() {
           </div>
           <div className="flex flex-col items-center">
             {/* Avatar */}
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden mb-4">
+            <div className="w-24 h-24 rounded-full bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden mb-4">
               {profile.avatar_url ? (
                 <Image
                   src={profile.avatar_url}

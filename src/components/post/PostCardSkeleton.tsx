@@ -10,7 +10,7 @@ export function PostCardSkeleton({ showImage = false }: PostCardSkeletonProps) {
       {/* Header: Avatar, Nickname, Time, Distance */}
       <div className="flex items-center gap-3 mb-3">
         {/* Avatar skeleton */}
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 animate-pulse" />
+        <div className="w-10 h-10 rounded-full bg-linear-to-br from-gray-100 to-gray-200 animate-pulse" />
 
         <div className="flex-1 min-w-0 space-y-2">
           {/* Nickname skeleton */}

@@ -1,30 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { signUp } from "@/lib/actions/auth";
 import { ROUTES } from "@/lib/constants";
 import { Alert } from "@/components/ui/Alert";
 import { Spinner } from "@/components/ui/Spinner";
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+    >
+      {pending && <Spinner size="sm" />}
+      {pending ? "Creating account..." : "Sign Up"}
+    </button>
+  );
+}
+
 export function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
     setSuccess(null);
-    setLoading(true);
 
     const result = await signUp(formData);
 
     if (result?.error) {
       setError(result.error);
-      setLoading(false);
     } else if (result?.success) {
       setSuccess(result.success);
-      setLoading(false);
     }
   }
 
@@ -98,14 +110,7 @@ export function SignupForm() {
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-      >
-        {loading && <Spinner size="sm" />}
-        {loading ? "Creating account..." : "Sign Up"}
-      </button>
+      <SubmitButton />
 
       {/* Login Link */}
       <p className="text-center text-sm text-gray-600">

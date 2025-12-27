@@ -30,7 +30,7 @@ export function PostList({
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="w-20 h-20 mb-4 rounded-2xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+        <div className="w-20 h-20 mb-4 rounded-2xl bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center">
           <svg
             className="w-10 h-10 text-gray-400"
             fill="none"

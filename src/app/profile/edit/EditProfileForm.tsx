@@ -145,7 +145,7 @@ export default function EditProfileForm({
         {/* Avatar Section - Centered & Prominent */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative group">
-            <div className="w-28 h-28 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 p-[2px] shadow-lg shadow-blue-200">
+            <div className="w-28 h-28 rounded-full bg-linear-to-br from-blue-400 to-blue-600 p-[2px] shadow-lg shadow-blue-200">
               <div className="w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
                 {uploadingAvatar ? (
                   <Spinner size="lg" className="text-blue-600" />

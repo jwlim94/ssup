@@ -1,25 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { useFormStatus } from "react-dom";
 import Link from "next/link";
 import { signIn } from "@/lib/actions/auth";
 import { ROUTES } from "@/lib/constants";
 import { Alert } from "@/components/ui/Alert";
 import { Spinner } from "@/components/ui/Spinner";
 
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+    >
+      {pending && <Spinner size="sm" />}
+      {pending ? "Logging in..." : "Log In"}
+    </button>
+  );
+}
+
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setError(null);
-    setLoading(true);
 
     const result = await signIn(formData);
 
     if (result?.error) {
       setError(result.error);
-      setLoading(false);
     }
     // 성공 시 signIn 함수에서 redirect 처리됨
   }
@@ -66,14 +79,7 @@ export function LoginForm() {
       </div>
 
       {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-      >
-        {loading && <Spinner size="sm" />}
-        {loading ? "Logging in..." : "Log In"}
-      </button>
+      <SubmitButton />
 
       {/* Signup Link */}
       <p className="text-center text-sm text-gray-600">

@@ -31,7 +31,7 @@ export function PostCard({ post, currentUserId }: PostCardProps) {
       <article className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
         {/* Header: Avatar, Nickname, Time, Distance */}
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-100 to-blue-200 flex items-center justify-center overflow-hidden">
             {post.avatar_url ? (
               <Image
                 src={post.avatar_url}
