@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signIn } from "@/lib/actions/auth";
 import { ROUTES } from "@/lib/constants";
 import { Alert } from "@/components/ui/Alert";
+import { Spinner } from "@/components/ui/Spinner";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
@@ -68,8 +69,9 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+        className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
       >
+        {loading && <Spinner size="sm" />}
         {loading ? "Logging in..." : "Log In"}
       </button>
 

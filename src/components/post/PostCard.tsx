@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatRelativeTime, formatTimeLeft } from "@/lib/utils/time";
 import { formatDistance } from "@/lib/utils/distance";
+import { ImageWithLoading } from "@/components/ui/ImageWithLoading";
 
 interface PostCardProps {
   post: {
@@ -72,7 +73,7 @@ export function PostCard({ post, currentUserId }: PostCardProps) {
         {/* Image */}
         {post.image_url && (
           <div className="mb-3 rounded-lg overflow-hidden relative aspect-video">
-            <Image
+            <ImageWithLoading
               src={post.image_url}
               alt="Post image"
               fill

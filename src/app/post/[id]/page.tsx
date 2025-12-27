@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ImageWithLoading } from "@/components/ui/ImageWithLoading";
 import { getPost } from "@/lib/actions/posts";
 import { getComments } from "@/lib/actions/comments";
 import { checkPostLiked, checkCommentLiked } from "@/lib/actions/likes";
@@ -126,7 +127,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           {/* Image */}
           {post.image_url && (
             <div className="mb-4 rounded-lg overflow-hidden relative aspect-video">
-              <Image
+              <ImageWithLoading
                 src={post.image_url}
                 alt="Post image"
                 fill

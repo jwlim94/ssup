@@ -8,6 +8,7 @@ import { useRealtimePosts } from "@/hooks/useRealtimePosts";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { LocationPermission } from "@/components/location/LocationPermission";
 import { PostList } from "@/components/post/PostList";
+import { PostListSkeleton } from "@/components/post/PostListSkeleton";
 import { MapView } from "@/components/map";
 import { Toast } from "@/components/ui/Toast";
 import { PullToRefreshIndicator } from "@/components/ui/PullToRefresh";
@@ -163,8 +164,32 @@ export default function HomePage() {
   // 위치 로딩 중
   if (locationLoading || authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gray-50">
+        {/* Skeleton Header */}
+        <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
+          <div className="max-w-lg mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 bg-gray-200 rounded animate-pulse" />
+                <div className="h-5 w-12 bg-gray-200 rounded animate-pulse" />
+              </div>
+              <div className="h-4 w-14 bg-gray-200 rounded animate-pulse" />
+            </div>
+          </div>
+        </header>
+
+        {/* Skeleton Controls */}
+        <div className="max-w-lg mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="h-8 w-24 bg-gray-200 rounded-lg animate-pulse" />
+            <div className="h-8 w-20 bg-gray-200 rounded-lg animate-pulse" />
+          </div>
+        </div>
+
+        {/* Skeleton Posts */}
+        <main className="max-w-lg mx-auto px-4 pb-24">
+          <PostListSkeleton count={3} />
+        </main>
       </div>
     );
   }
@@ -317,9 +342,7 @@ export default function HomePage() {
       {/* Content: List or Map */}
       <main className="max-w-lg mx-auto px-4 pb-24">
         {postsLoading ? (
-          <div className="flex justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
+          <PostListSkeleton count={3} />
         ) : postsError ? (
           <Alert message={postsError} variant="error" />
         ) : viewMode === "list" ? (

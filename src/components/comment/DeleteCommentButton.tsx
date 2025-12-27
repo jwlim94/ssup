@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { deleteComment } from "@/lib/actions/comments";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface DeleteCommentButtonProps {
   commentId: string;
@@ -34,9 +35,9 @@ export function DeleteCommentButton({
         <button
           onClick={handleDelete}
           disabled={loading}
-          className="text-xs text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+          className="text-xs text-red-600 hover:text-red-700 font-medium disabled:opacity-50 flex items-center gap-1"
         >
-          {loading ? "..." : "Yes"}
+          {loading ? <Spinner size="sm" className="text-red-600" /> : "Yes"}
         </button>
         <span className="text-gray-300">|</span>
         <button

@@ -1,6 +1,7 @@
 "use client";
 
 import { Alert } from "@/components/ui/Alert";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface LocationPermissionProps {
   onRequestPermission: () => void;
@@ -48,13 +49,16 @@ export function LocationPermission({
         used to find posts within 5km of you.
       </p>
 
-      {error && <Alert message={error} variant="error" className="mb-4 max-w-sm" />}
+      {error && (
+        <Alert message={error} variant="error" className="mb-4 max-w-sm" />
+      )}
 
       <button
         onClick={onRequestPermission}
         disabled={loading}
-        className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+        className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
       >
+        {loading && <Spinner size="sm" />}
         {loading ? "Getting location..." : "Enable Location"}
       </button>
 

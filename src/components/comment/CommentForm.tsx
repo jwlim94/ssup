@@ -5,6 +5,7 @@ import { useLocation } from "@/hooks/useLocation";
 import { createComment } from "@/lib/actions/comments";
 import { APP_CONFIG } from "@/lib/constants";
 import { Alert } from "@/components/ui/Alert";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface CommentFormProps {
   postId: string;
@@ -68,9 +69,9 @@ export function CommentForm({ postId, onSuccess }: CommentFormProps) {
         <button
           type="submit"
           disabled={loading || !content.trim() || isOverLimit}
-          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5 min-w-[60px]"
         >
-          {loading ? "..." : "Post"}
+          {loading ? <Spinner size="sm" /> : "Post"}
         </button>
       </div>
       {content.length > 0 && (

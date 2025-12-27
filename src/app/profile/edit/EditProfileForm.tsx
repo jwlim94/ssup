@@ -10,6 +10,7 @@ import {
 } from "@/lib/actions/profile";
 import { ROUTES } from "@/lib/constants";
 import { Alert } from "@/components/ui/Alert";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface Profile {
   id: string;
@@ -143,7 +144,7 @@ export default function EditProfileForm({
           <div className="flex items-center gap-4">
             <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
               {uploadingAvatar ? (
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                <Spinner size="lg" className="text-blue-600" />
               ) : profile.avatar_url ? (
                 <Image
                   src={profile.avatar_url}
@@ -212,8 +213,9 @@ export default function EditProfileForm({
                 disabled={
                   saving || nickname === profile.nickname || !nickname.trim()
                 }
-                className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+                className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
               >
+                {saving && <Spinner size="sm" />}
                 {saving ? "Saving..." : "Save"}
               </button>
             </div>

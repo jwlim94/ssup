@@ -10,6 +10,7 @@ import { uploadPostImage, deletePostImage } from "@/lib/actions/storage";
 import { APP_CONFIG, ROUTES } from "@/lib/constants";
 import { LocationPermission } from "@/components/location/LocationPermission";
 import { Alert } from "@/components/ui/Alert";
+import { Spinner } from "@/components/ui/Spinner";
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -173,8 +174,9 @@ export default function NewPostPage() {
               disabled={
                 loading || !content.trim() || isOverLimit || imageUploading
               }
-              className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors"
+              className="px-4 py-1.5 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5"
             >
+              {loading && <Spinner size="sm" />}
               {loading ? "Posting..." : "Post"}
             </button>
           </div>
@@ -255,7 +257,7 @@ export default function NewPostPage() {
         {/* Image Uploading */}
         {imageUploading && (
           <div className="mb-4 p-4 bg-gray-50 rounded-lg flex items-center justify-center gap-2">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <Spinner size="md" className="text-blue-600" />
             <span className="text-sm text-gray-600">Uploading image...</span>
           </div>
         )}

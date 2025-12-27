@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { deletePost } from "@/lib/actions/posts";
 import { ROUTES } from "@/lib/constants";
+import { Spinner } from "@/components/ui/Spinner";
 
 interface DeletePostButtonProps {
   postId: string;
@@ -34,9 +35,9 @@ export function DeletePostButton({ postId }: DeletePostButtonProps) {
         <button
           onClick={handleDelete}
           disabled={loading}
-          className="text-sm text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+          className="text-sm text-red-600 hover:text-red-700 font-medium disabled:opacity-50 flex items-center gap-1"
         >
-          {loading ? "..." : "Yes"}
+          {loading ? <Spinner size="sm" className="text-red-600" /> : "Yes"}
         </button>
         <button
           onClick={() => setShowConfirm(false)}
