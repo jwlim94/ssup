@@ -6,10 +6,12 @@ import { useLocation } from "@/hooks/useLocation";
 import { useAuth } from "@/hooks/useAuth";
 import { LocationPermission } from "@/components/location/LocationPermission";
 import { PostList } from "@/components/post/PostList";
+import { MapView } from "@/components/map";
 import { getNearbyPosts } from "@/lib/actions/posts";
 import { ROUTES } from "@/lib/constants";
 
 type SortOption = "recent" | "distance" | "popular";
+type ViewMode = "list" | "map";
 
 interface Post {
   id: string;
@@ -23,6 +25,8 @@ interface Post {
   likes_count: number;
   comments_count: number;
   user_id: string;
+  latitude: number;
+  longitude: number;
 }
 
 export default function HomePage() {
@@ -39,6 +43,7 @@ export default function HomePage() {
   const [postsLoading, setPostsLoading] = useState(false);
   const [postsError, setPostsError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>("recent");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   // 위치가 있으면 포스트 로드
   useEffect(() => {
@@ -136,20 +141,71 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Sort Options */}
+      {/* Controls: Sort + View Toggle */}
       <div className="max-w-lg mx-auto px-4 py-3">
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-        >
-          <option value="recent">Recent</option>
-          <option value="distance">Nearest</option>
-          <option value="popular">Popular</option>
-        </select>
+        <div className="flex items-center justify-between">
+          {/* Sort Options */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            className="px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          >
+            <option value="recent">Recent</option>
+            <option value="distance">Nearest</option>
+            <option value="popular">Popular</option>
+          </select>
+
+          {/* View Toggle */}
+          <div className="flex items-center bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => setViewMode("list")}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewMode === "list"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={() => setViewMode("map")}
+              className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                viewMode === "map"
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Posts */}
+      {/* Content: List or Map */}
       <main className="max-w-lg mx-auto px-4 pb-24">
         {postsLoading ? (
           <div className="flex justify-center py-8">
@@ -159,8 +215,16 @@ export default function HomePage() {
           <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg">
             {postsError}
           </div>
-        ) : (
+        ) : viewMode === "list" ? (
           <PostList posts={posts} currentUserId={user?.id} />
+        ) : (
+          <MapView
+            posts={posts}
+            userLocation={{
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+            }}
+          />
         )}
       </main>
 
@@ -168,7 +232,7 @@ export default function HomePage() {
       {user && (
         <Link
           href={ROUTES.POST_NEW}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
+          className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors z-20"
         >
           <svg
             className="w-6 h-6"
