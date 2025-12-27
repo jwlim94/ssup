@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Link from "next/link";
 import { useLocation } from "@/hooks/useLocation";
 import { useAuth } from "@/hooks/useAuth";
+import { useRealtimePosts } from "@/hooks/useRealtimePosts";
+import { usePullToRefresh } from "@/hooks/usePullToRefresh";
 import { LocationPermission } from "@/components/location/LocationPermission";
 import { PostList } from "@/components/post/PostList";
 import { MapView } from "@/components/map";
+import { Toast } from "@/components/ui/Toast";
+import { PullToRefreshIndicator } from "@/components/ui/PullToRefresh";
 import { getNearbyPosts } from "@/lib/actions/posts";
 import { ROUTES } from "@/lib/constants";
 
@@ -45,15 +49,52 @@ export default function HomePage() {
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
 
+  // 스크롤 & 토스트 상태
+  const [isAtTop, setIsAtTop] = useState(true);
+  const [showToast, setShowToast] = useState(false);
+  const [newPostCount, setNewPostCount] = useState(0);
+  const mainRef = useRef<HTMLDivElement>(null);
+
+  // 스크롤 위치 감지
+  useEffect(() => {
+    function handleScroll() {
+      setIsAtTop(window.scrollY < 100);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // 위치가 있으면 포스트 로드
   useEffect(() => {
-    if (coordinates) {
-      loadPosts();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!coordinates) return;
+
+    const fetchPosts = async () => {
+      setPostsLoading(true);
+      setPostsError(null);
+
+      const result = await getNearbyPosts(
+        coordinates.latitude,
+        coordinates.longitude,
+        sortBy
+      );
+
+      if (result.error) {
+        setPostsError(result.error);
+      } else {
+        setPosts(result.data || []);
+      }
+
+      setPostsLoading(false);
+      setNewPostCount(0);
+      setShowToast(false);
+    };
+
+    fetchPosts();
   }, [coordinates, sortBy]);
 
-  async function loadPosts() {
+  // 수동 새로고침용 loadPosts
+  const loadPosts = useCallback(async () => {
     if (!coordinates) return;
 
     setPostsLoading(true);
@@ -72,7 +113,51 @@ export default function HomePage() {
     }
 
     setPostsLoading(false);
-  }
+    setNewPostCount(0);
+    setShowToast(false);
+  }, [coordinates, sortBy]);
+
+  // 새 포스트 알림 핸들러
+  const handleNewPost = useCallback(() => {
+    if (isAtTop && viewMode === "list") {
+      // 맨 위에 있으면 자동 갱신
+      loadPosts();
+    } else {
+      // 스크롤 중이면 토스트 표시
+      setNewPostCount((prev) => prev + 1);
+      setShowToast(true);
+    }
+  }, [isAtTop, viewMode, loadPosts]);
+
+  // Realtime 구독
+  useRealtimePosts({
+    userLocation: coordinates,
+    onNewPost: handleNewPost,
+    enabled: !!coordinates,
+  });
+
+  // Pull-to-refresh
+  const { pullDistance, isRefreshing, progress } = usePullToRefresh({
+    onRefresh: async () => {
+      await loadPosts();
+    },
+    enabled: !!coordinates && viewMode === "list",
+  });
+
+  // 토스트 클릭 핸들러
+  const handleToastClick = useCallback(() => {
+    // 토스트 먼저 숨기기
+    setShowToast(false);
+    setNewPostCount(0);
+
+    // 맵 뷰면 리스트 뷰로 전환
+    if (viewMode === "map") {
+      setViewMode("list");
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    loadPosts();
+  }, [viewMode, loadPosts]);
 
   // 위치 로딩 중
   if (locationLoading || authLoading) {
@@ -95,7 +180,30 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50" ref={mainRef}>
+      {/* Pull to Refresh Indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullDistance}
+        isRefreshing={isRefreshing}
+        progress={progress}
+      />
+
+      {/* Toast */}
+      <Toast
+        message={
+          viewMode === "map"
+            ? newPostCount === 1
+              ? "새 포스트가 있어요! 탭하여 리스트에서 확인"
+              : `${newPostCount}개의 새 포스트! 탭하여 리스트에서 확인`
+            : newPostCount === 1
+            ? "새 포스트가 있어요!"
+            : `${newPostCount}개의 새 포스트가 있어요!`
+        }
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+        onClick={handleToastClick}
+      />
+
       {/* Header */}
       <header className="sticky top-0 bg-white border-b border-gray-200 z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
