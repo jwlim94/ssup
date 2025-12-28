@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { APP_CONFIG } from "@/lib/constants";
+import { createNotification } from "./notifications";
 
 /**
  * 포스트의 댓글 목록 조회
@@ -97,6 +98,22 @@ export async function createComment(formData: FormData) {
 
   if (error) {
     return { error: error.message };
+  }
+
+  // 포스트 작성자에게 알림
+  const { data: post } = await supabase
+    .from("posts")
+    .select("user_id")
+    .eq("id", postId)
+    .single();
+
+  if (post) {
+    await createNotification({
+      userId: post.user_id,
+      actorId: user.id,
+      type: "comment",
+      postId: postId,
+    });
   }
 
   revalidatePath(`/post/${postId}`);

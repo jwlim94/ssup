@@ -48,4 +48,5 @@ export const ROUTES = {
   PROFILE: "/profile",
   PROFILE_EDIT: "/profile/edit",
   PROFILE_POSTS: "/profile/posts",
+  NOTIFICATIONS: "/notifications",
 } as const;

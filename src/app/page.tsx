@@ -13,6 +13,7 @@ import { MapView } from "@/components/map";
 import { Toast } from "@/components/ui/Toast";
 import { PullToRefreshIndicator } from "@/components/ui/PullToRefresh";
 import { Alert } from "@/components/ui/Alert";
+import NotificationBadge from "@/components/notification/NotificationBadge";
 import { getNearbyPosts } from "@/lib/actions/posts";
 import { ROUTES } from "@/lib/constants";
 
@@ -233,24 +234,27 @@ export default function HomePage() {
           <div className="flex items-center justify-between">
             <span className="font-bold text-gray-900 text-lg">SSUP</span>
             {user ? (
-              <Link
-                href={ROUTES.PROFILE}
-                className="text-blue-600 hover:text-blue-700 p-2 -m-2"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+              <div className="flex items-center gap-2">
+                <NotificationBadge />
+                <Link
+                  href={ROUTES.PROFILE}
+                  className="text-gray-600 hover:text-gray-900 p-2 -m-2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </Link>
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                </Link>
+              </div>
             ) : (
               <Link
                 href={ROUTES.LOGIN}

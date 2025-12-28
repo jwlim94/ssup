@@ -105,6 +105,68 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          actor_id: string
+          comment_id: string | null
+          created_at: string | null
+          id: string
+          post_id: string | null
+          read_at: string | null
+          type: string
+          user_id: string
+        }
+        Insert: {
+          actor_id: string
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          read_at?: string | null
+          type: string
+          user_id: string
+        }
+        Update: {
+          actor_id?: string
+          comment_id?: string | null
+          created_at?: string | null
+          id?: string
+          post_id?: string | null
+          read_at?: string | null
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_actor_id_fkey"
+            columns: ["actor_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           content: string
@@ -178,6 +240,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_grouped_notifications: {
+        Args: { p_user_id: string }
+        Returns: {
+          comment_content: string
+          comment_id: string
+          latest_at: string
+          post_content: string
+          post_id: string
+          recent_actors: Json
+          total_count: number
+          type: string
+          unread_count: number
+        }[]
+      }
       get_nearby_posts: {
         Args: {
           radius_meters?: number
@@ -194,10 +270,16 @@ export type Database = {
           expires_at: string
           id: string
           image_url: string
+          latitude: number
           likes_count: number
+          longitude: number
           nickname: string
           user_id: string
         }[]
+      }
+      get_unread_notification_count: {
+        Args: { p_user_id: string }
+        Returns: number
       }
     }
     Enums: {

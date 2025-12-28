@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createNotification } from "./notifications";
 
 /**
  * 포스트 좋아요 토글
@@ -47,6 +48,22 @@ export async function togglePostLike(postId: string) {
 
     if (error) {
       return { error: error.message };
+    }
+
+    // 포스트 작성자에게 알림
+    const { data: post } = await supabase
+      .from("posts")
+      .select("user_id")
+      .eq("id", postId)
+      .single();
+
+    if (post) {
+      await createNotification({
+        userId: post.user_id,
+        actorId: user.id,
+        type: "post_like",
+        postId: postId,
+      });
     }
 
     revalidatePath("/");
@@ -98,6 +115,23 @@ export async function toggleCommentLike(commentId: string, postId: string) {
 
     if (error) {
       return { error: error.message };
+    }
+
+    // 댓글 작성자에게 알림
+    const { data: comment } = await supabase
+      .from("comments")
+      .select("user_id")
+      .eq("id", commentId)
+      .single();
+
+    if (comment) {
+      await createNotification({
+        userId: comment.user_id,
+        actorId: user.id,
+        type: "comment_like",
+        postId: postId,
+        commentId: commentId,
+      });
     }
 
     revalidatePath(`/post/${postId}`);
