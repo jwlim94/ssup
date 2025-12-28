@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
 import { useLocation } from "@/hooks/useLocation";
 import { createPost } from "@/lib/actions/posts";
@@ -28,9 +27,34 @@ export default function NewPostPage() {
   const [imageUploading, setImageUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [postCreated, setPostCreated] = useState(false);
+
+  // 페이지 이탈 시 업로드된 이미지 정리
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // 이미지가 있고, 포스트가 생성되지 않았다면 삭제 요청
+      if (imageUrl && !postCreated) {
+        navigator.sendBeacon(
+          "/api/cleanup-image",
+          JSON.stringify({ imageUrl })
+        );
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [imageUrl, postCreated]);
 
   const charCount = content.length;
   const isOverLimit = charCount > APP_CONFIG.MAX_POST_LENGTH;
+
+  // X 버튼 클릭 핸들러 (이미지 정리 후 홈으로 이동)
+  async function handleClose() {
+    if (imageUrl) {
+      await deletePostImage(imageUrl);
+    }
+    router.push(ROUTES.HOME);
+  }
 
   // 이미지 선택 핸들러
   async function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
@@ -121,6 +145,7 @@ export default function NewPostPage() {
       setError(result.error);
       setLoading(false);
     } else {
+      setPostCreated(true);
       router.push(ROUTES.HOME);
     }
   }
@@ -151,8 +176,8 @@ export default function NewPostPage() {
       <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
         <div className="max-w-lg mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link
-              href={ROUTES.HOME}
+            <button
+              onClick={handleClose}
               className="text-gray-600 hover:text-gray-900 p-2 -m-2"
             >
               <svg
@@ -168,7 +193,7 @@ export default function NewPostPage() {
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-            </Link>
+            </button>
             <button
               onClick={handleSubmit}
               disabled={
