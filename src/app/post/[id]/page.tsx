@@ -112,7 +112,14 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
                 )}
               </div>
               <div>
-                <p className="font-semibold text-gray-900">{user.nickname}</p>
+                <p className="font-semibold text-gray-900 flex items-center gap-2">
+                  {user.nickname}
+                  {isPostOwner && (
+                    <span className="text-xs bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-full font-medium">
+                      You
+                    </span>
+                  )}
+                </p>
                 <p className="flex items-center gap-1 text-sm text-gray-500">
                   <svg
                     className="w-3.5 h-3.5"

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { APP_CONFIG } from "@/lib/constants";
 import { createNotification } from "./notifications";
 
@@ -20,6 +21,13 @@ export async function getComments(postId: string) {
         id,
         nickname,
         avatar_url
+      ),
+      mentions (
+        mentioned_user_id,
+        users:mentioned_user_id (
+          id,
+          nickname
+        )
       )
     `
     )
@@ -88,19 +96,67 @@ export async function createComment(formData: FormData) {
     return { error: "Location is required" };
   }
 
-  // PostGIS Point 형식으로 위치 저장
-  const { error } = await supabase.from("comments").insert({
-    post_id: postId,
-    user_id: user.id,
-    content: content.trim(),
-    location: `POINT(${longitude} ${latitude})`,
-  });
+  // PostGIS Point 형식으로 위치 저장 (id 반환)
+  const { data: newComment, error } = await supabase
+    .from("comments")
+    .insert({
+      post_id: postId,
+      user_id: user.id,
+      content: content.trim(),
+      location: `POINT(${longitude} ${latitude})`,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     return { error: error.message };
   }
 
-  // 포스트 작성자에게 알림
+  // ============ 멘션 처리 ============
+  const mentionRegex = /@(\w+)/g;
+  const matches = content.match(mentionRegex);
+
+  if (matches && matches.length > 0) {
+    // @ 제거 + 중복 제거
+    const nicknames = [...new Set(matches.map((m) => m.slice(1)))];
+
+    // nickname → user 조회
+    const { data: mentionedUsers } = await supabase
+      .from("users")
+      .select("id, nickname")
+      .in("nickname", nicknames);
+
+    if (mentionedUsers && mentionedUsers.length > 0) {
+      const adminClient = createAdminClient();
+
+      // 자기 자신 제외
+      const validMentions = mentionedUsers.filter((u) => u.id !== user.id);
+
+      if (validMentions.length > 0) {
+        // mentions 테이블에 저장
+        const mentionRecords = validMentions.map((u) => ({
+          comment_id: newComment.id,
+          mentioned_user_id: u.id,
+        }));
+
+        await adminClient.from("mentions").insert(mentionRecords);
+
+        // 각 멘션된 사용자에게 알림 발송
+        for (const mentionedUser of validMentions) {
+          await createNotification({
+            userId: mentionedUser.id,
+            actorId: user.id,
+            type: "mention",
+            postId: postId,
+            commentId: newComment.id,
+          });
+        }
+      }
+    }
+  }
+  // ============ 멘션 처리 끝 ============
+
+  // 포스트 작성자에게 댓글 알림
   const { data: post } = await supabase
     .from("posts")
     .select("user_id")

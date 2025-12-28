@@ -58,5 +58,5 @@ export const NOTIFICATION_MESSAGES: Record<
   comment: { icon: "💬", action: "commented on your post" },
   post_like: { icon: "❤️", action: "liked your post" },
   comment_like: { icon: "❤️", action: "liked your comment" },
-  mention: { icon: "@", action: "mentioned you" },
+  mention: { icon: "📣", action: "mentioned you" },
 };

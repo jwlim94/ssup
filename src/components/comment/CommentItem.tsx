@@ -4,6 +4,7 @@ import Image from "next/image";
 import { formatRelativeTime } from "@/lib/utils/time";
 import { CommentLikeButton } from "./CommentLikeButton";
 import { DeleteCommentButton } from "./DeleteCommentButton";
+import { CommentContent } from "./CommentContent";
 
 interface CommentItemProps {
   comment: {
@@ -16,6 +17,13 @@ interface CommentItemProps {
       avatar_url: string | null;
     };
     likes_count: number;
+    mentions?: {
+      mentioned_user_id: string;
+      users: {
+        id: string;
+        nickname: string;
+      };
+    }[];
   };
   postId: string;
   currentUserId?: string;
@@ -83,9 +91,10 @@ export function CommentItem({
               <DeleteCommentButton commentId={comment.id} postId={postId} />
             )}
           </div>
-          <p className="text-gray-700 text-sm whitespace-pre-wrap wrap-break-word leading-relaxed">
-            {comment.content}
-          </p>
+          <CommentContent
+            content={comment.content}
+            mentions={comment.mentions}
+          />
 
           {/* Actions */}
           <div className="mt-2.5 flex items-center">
