@@ -36,6 +36,15 @@ export const SORT_OPTIONS = {
 export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
 
 // ============================================
+// Weather Config (날씨 설정)
+// ============================================
+
+export const WEATHER_CONFIG = {
+  // 날씨 갱신 주기 (밀리초) - 30분
+  REFRESH_INTERVAL_MS: 30 * 60 * 1000,
+} as const;
+
+// ============================================
 // Route Paths (라우트 경로)
 // ============================================
 
