@@ -204,7 +204,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className={`min-h-screen bg-gray-50 ${viewMode === "map" ? "overflow-hidden h-screen" : ""}`} ref={mainRef}>
+    <div
+      className={`min-h-screen bg-gray-50 ${
+        viewMode === "map" ? "overflow-hidden h-screen" : ""
+      }`}
+      ref={mainRef}
+    >
       {/* Pull to Refresh Indicator */}
       <PullToRefreshIndicator
         pullDistance={pullDistance}
@@ -297,7 +302,7 @@ export default function HomePage() {
               </svg>
             </div>
           ) : (
-            <div /> 
+            <div />
           )}
 
           {/* View Toggle */}
@@ -351,7 +356,11 @@ export default function HomePage() {
       </div>
 
       {/* Content: List or Map */}
-      <main className={`max-w-lg mx-auto px-4 ${viewMode === "list" ? "pb-24" : "pb-4"}`}>
+      <main
+        className={`max-w-lg mx-auto px-4 ${
+          viewMode === "list" ? "pb-24" : "pb-4"
+        }`}
+      >
         {postsLoading ? (
           <PostListSkeleton count={3} />
         ) : postsError ? (
