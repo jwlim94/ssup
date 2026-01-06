@@ -4,6 +4,7 @@ import { getMyPosts } from "@/lib/actions/profile";
 import { ROUTES } from "@/lib/constants";
 import { formatRelativeTime, formatTimeLeft } from "@/lib/utils/time";
 import { Alert } from "@/components/ui/Alert";
+import { MainLayout } from "@/components/layout";
 
 export default async function MyPostsPage() {
   const { data: posts, error } = await getMyPosts();
@@ -13,33 +14,34 @@ export default async function MyPostsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
-            <Link
-              href={ROUTES.PROFILE}
-              className="text-gray-600 hover:text-gray-900 p-2 -m-2"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <MainLayout>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
+          <div className="max-w-lg mx-auto px-4 py-3">
+            <div className="flex items-center gap-4">
+              <Link
+                href={ROUTES.PROFILE}
+                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </Link>
-            <h1 className="font-semibold text-gray-900 text-lg">My Posts</h1>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </Link>
+              <h1 className="font-semibold text-gray-900 text-lg">My Posts</h1>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       <main className="max-w-lg mx-auto px-4 py-4">
         {error && <Alert message={error} variant="error" />}
@@ -147,7 +149,8 @@ export default async function MyPostsPage() {
             ))}
           </div>
         )}
-      </main>
-    </div>
+        </main>
+      </div>
+    </MainLayout>
   );
 }

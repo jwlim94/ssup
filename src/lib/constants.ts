@@ -43,6 +43,7 @@ export const ROUTES = {
   HOME: "/",
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  CHAT: "/chat",
   POST_NEW: "/post/new",
   POST_DETAIL: (id: string) => `/post/${id}`,
   PROFILE: "/profile",

@@ -1,6 +1,12 @@
 import { LoginForm } from "@/components/auth/LoginForm";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ returnUrl?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const { returnUrl } = await searchParams;
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-gray-50 to-gray-100">
       <div className="w-full max-w-md">
@@ -11,7 +17,7 @@ export default function LoginPage() {
           </p>
         </div>
         <div className="bg-white rounded-2xl shadow-sm p-6">
-          <LoginForm />
+          <LoginForm returnUrl={returnUrl} />
         </div>
       </div>
     </div>

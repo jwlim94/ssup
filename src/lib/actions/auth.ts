@@ -52,12 +52,14 @@ export async function signUp(formData: FormData) {
 
 /**
  * 로그인
+ * @param formData - email, password, redirectTo (optional)
  */
 export async function signIn(formData: FormData) {
   const supabase = await createClient();
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  const redirectTo = (formData.get("redirectTo") as string) || ROUTES.HOME;
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -69,7 +71,7 @@ export async function signIn(formData: FormData) {
   }
 
   revalidatePath("/", "layout");
-  redirect(ROUTES.HOME);
+  redirect(redirectTo);
 }
 
 /**

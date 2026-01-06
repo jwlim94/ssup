@@ -12,6 +12,7 @@ import { CommentSection } from "./CommentSection";
 import { PostLikeButton } from "./PostLikeButton";
 import { DeletePostButton } from "./DeletePostButton";
 import { createClient } from "@/lib/supabase/server";
+import { MainLayout } from "@/components/layout";
 
 interface PostDetailPageProps {
   params: Promise<{ id: string }>;
@@ -60,35 +61,36 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
   const isPostOwner = currentUser?.id === post.user_id;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link
-                href={ROUTES.HOME}
-                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+    <MainLayout showBottomNav={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
+          <div className="max-w-lg mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Link
+                  href={ROUTES.HOME}
+                  className="text-gray-600 hover:text-gray-900 p-2 -m-2"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </Link>
-              <h1 className="font-semibold text-gray-900 text-lg">Post</h1>
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </Link>
+                <h1 className="font-semibold text-gray-900 text-lg">Post</h1>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       {/* Post Content */}
       <main className="max-w-lg mx-auto px-4 py-4">
@@ -211,6 +213,7 @@ export default async function PostDetailPage({ params }: PostDetailPageProps) {
           <CommentSection postId={id} isLoggedIn={!!currentUser} />
         </div>
       </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

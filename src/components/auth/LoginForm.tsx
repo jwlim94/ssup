@@ -10,7 +10,7 @@ import { Spinner } from "@/components/ui/Spinner";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
-  
+
   return (
     <button
       type="submit"
@@ -23,7 +23,12 @@ function SubmitButton() {
   );
 }
 
-export function LoginForm() {
+interface LoginFormProps {
+  /** 로그인 성공 후 리다이렉트할 URL */
+  returnUrl?: string;
+}
+
+export function LoginForm({ returnUrl }: LoginFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(formData: FormData) {
@@ -39,6 +44,9 @@ export function LoginForm() {
 
   return (
     <form action={handleSubmit} className="space-y-4">
+      {/* Hidden field for redirect URL */}
+      {returnUrl && <input type="hidden" name="redirectTo" value={returnUrl} />}
+
       {/* Error Message */}
       {error && <Alert message={error} variant="error" />}
 

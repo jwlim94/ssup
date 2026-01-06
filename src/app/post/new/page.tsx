@@ -10,6 +10,7 @@ import { APP_CONFIG, ROUTES } from "@/lib/constants";
 import { LocationPermission } from "@/components/location/LocationPermission";
 import { Alert } from "@/components/ui/Alert";
 import { Spinner } from "@/components/ui/Spinner";
+import { MainLayout } from "@/components/layout";
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -171,42 +172,43 @@ export default function NewPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handleClose}
-              className="text-gray-600 hover:text-gray-900 p-2 -m-2"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <MainLayout showBottomNav={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10">
+          <div className="max-w-lg mx-auto px-4 py-3">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={handleClose}
+                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={
-                loading || !content.trim() || isOverLimit || imageUploading
-              }
-              className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 shadow-sm"
-            >
-              {loading && <Spinner size="sm" />}
-              {loading ? "Posting..." : "Post"}
-            </button>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={
+                  loading || !content.trim() || isOverLimit || imageUploading
+                }
+                className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-full hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-1.5 shadow-sm"
+              >
+                {loading && <Spinner size="sm" />}
+                {loading ? "Posting..." : "Post"}
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto px-4 py-4">
@@ -336,7 +338,8 @@ export default function NewPostPage() {
             </span>
           </div>
         </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </MainLayout>
   );
 }

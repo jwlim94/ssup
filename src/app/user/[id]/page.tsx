@@ -5,6 +5,7 @@ import { getUserById, getUserPosts } from "@/lib/actions/users";
 import { ProfileCard } from "@/components/profile/ProfileCard";
 import { ROUTES } from "@/lib/constants";
 import { formatRelativeTime } from "@/lib/utils/time";
+import { MainLayout } from "@/components/layout";
 
 interface UserProfilePageProps {
   params: Promise<{ id: string }>;
@@ -37,35 +38,36 @@ export default async function UserProfilePage({
   const { data: posts } = await getUserPosts(id);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10 h-[52px]">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
-            <Link
-              href={ROUTES.HOME}
-              className="text-gray-600 hover:text-gray-900 p-2 -m-2"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <MainLayout showBottomNav={false}>
+      <div className="min-h-screen bg-gray-50">
+        {/* Header */}
+        <header className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-10 h-[52px]">
+          <div className="max-w-lg mx-auto px-4 py-3">
+            <div className="flex items-center gap-4">
+              <Link
+                href={ROUTES.HOME}
+                className="text-gray-600 hover:text-gray-900 p-2 -m-2"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </Link>
-            <h1 className="font-semibold text-gray-900 text-lg">
-              {profile.nickname}
-            </h1>
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </Link>
+              <h1 className="font-semibold text-gray-900 text-lg">
+                {profile.nickname}
+              </h1>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
       <main className="max-w-lg mx-auto px-4 py-4">
         {/* Profile Card */}
@@ -132,7 +134,8 @@ export default async function UserProfilePage({
             </div>
           )}
         </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </MainLayout>
   );
 }
